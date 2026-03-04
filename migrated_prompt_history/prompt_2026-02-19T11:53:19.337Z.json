@@ -1,0 +1,630 @@
+[
+  {
+    "id": 0,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "create a link tree for me\n",
+      "files": [],
+      "fileUploads": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771500855,
+      "nanos": 92000000
+    }
+  },
+  {
+    "id": 1,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Defining the Core Elements**\n\nI'm now focusing on the fundamental components. My initial breakdown centers on the user's need for a \"Linktree\" clone. I've broken down the project into a profile section, a list of customizable links, and a social media icons footer. These are the building blocks. I'm considering customization options for each of these elements.\n\n\n**Adding Key Features**\n\nI've been adding key features. I'm prioritizing dark/light mode and a \"Creator Mode\" powered by the Gemini API for dynamic updates. I'm focusing on responsive design, making it mobile-first. Also, I'm aiming for a clean UI using Tailwind CSS, and Lucide-React will handle the icons.\n\n\n**Refining the UI Approach**\n\nI'm now implementing the Glassmorphism design and defining the application state with a `profile` object and persistent data via `localStorage`. The Gemini API integration is crucial, specifically the \"Optimize Bio\" and \"Suggest Theme\" features. I'm focusing on the `metadata.json` for permissions and a straightforward code structure that uses React 18, Tailwind CSS, and specific components for structure. I'm excited about the \"Magic Bio\" feature that generates a bio using keywords.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771500855,
+      "nanos": 92000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771500863,
+      "nanos": 842000000
+    }
+  },
+  {
+    "id": 2,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "metadata.json",
+          "generationType": 0,
+          "isDone": true,
+          "description": "App metadata including name and description.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\n{\n  \"name\": \"LuminaTree\",\n  \"description\": \"A high-end, AI-powered Linktree clone with glassmorphism design, real-time editing, and Gemini-driven bio optimization.\"\n}\n"
+            }
+          ]
+        },
+        {
+          "path": "index.html",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Primary HTML entry point with Tailwind CSS support.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>LuminaTree | Your Digital Identity</title>\n    <script src=\"https://cdn.tailwindcss.com\"></script>\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap\" rel=\"stylesheet\">\n    <style>\n      body {\n        font-family: 'Inter', sans-serif;\n        background: #0f172a;\n        color: white;\n      }\n      .glass {\n        background: rgba(255, 255, 255, 0.05);\n        backdrop-filter: blur(12px);\n        -webkit-backdrop-filter: blur(12px);\n        border: 1px solid rgba(255, 255, 255, 0.1);\n      }\n      .glass-card {\n        background: rgba(255, 255, 255, 0.03);\n        transition: all 0.3s ease;\n      }\n      .glass-card:hover {\n        background: rgba(255, 255, 255, 0.08);\n        transform: translateY(-2px);\n      }\n    </style>\n  </head>\n  <body>\n    <div id=\"root\"></div>\n  </body>\n</html>\n"
+            }
+          ]
+        },
+        {
+          "path": "index.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "React application entry point.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\n\nconst rootElement = document.getElementById('root');\nif (!rootElement) {\n  throw new Error(\"Could not find root element to mount to\");\n}\n\nconst root = ReactDOM.createRoot(rootElement);\nroot.render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);\n"
+            }
+          ]
+        },
+        {
+          "path": "types.ts",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Global TypeScript types and interfaces.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nexport interface LinkItem {\n  id: string;\n  title: string;\n  url: string;\n  icon?: string;\n  active: boolean;\n}\n\nexport interface UserProfile {\n  name: string;\n  bio: string;\n  avatarUrl: string;\n  theme: string;\n}\n\nexport enum ThemeType {\n  DEEP_SPACE = 'deep-space',\n  AURORA = 'aurora',\n  SUNSET = 'sunset',\n  MINIMAL = 'minimal'\n}\n"
+            }
+          ]
+        },
+        {
+          "path": "constants.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Global constants and initial data.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { \n  Github, \n  Twitter, \n  Linkedin, \n  Instagram, \n  Youtube, \n  Globe, \n  Mail, \n  Layers,\n  Sparkles,\n  Link as LinkIcon,\n  Palette,\n  User,\n  Plus,\n  Trash2,\n  ExternalLink,\n  ChevronRight,\n  Zap\n} from 'lucide-react';\nimport { LinkItem, UserProfile } from './types';\n\nexport const INITIAL_LINKS: LinkItem[] = [\n  { id: '1', title: 'Portfolio Website', url: 'https://example.com', icon: 'Globe', active: true },\n  { id: '2', title: 'My GitHub Profile', url: 'https://github.com', icon: 'Github', active: true },\n  { id: '3', title: 'Connect on LinkedIn', url: 'https://linkedin.com', icon: 'Linkedin', active: true },\n  { id: '4', title: 'Follow on Twitter', url: 'https://twitter.com', icon: 'Twitter', active: true },\n];\n\nexport const INITIAL_PROFILE: UserProfile = {\n  name: 'Alex Rivera',\n  bio: 'Full-stack developer & UI designer crafting digital experiences with purpose.',\n  avatarUrl: 'https://picsum.photos/id/64/200/200',\n  theme: 'deep-space'\n};\n\nexport const ICON_MAP: Record<string, React.ReactNode> = {\n  Github: <Github size={20} />,\n  Twitter: <Twitter size={20} />,\n  Linkedin: <Linkedin size={20} />,\n  Instagram: <Instagram size={20} />,\n  Youtube: <Youtube size={20} />,\n  Globe: <Globe size={20} />,\n  Mail: <Mail size={20} />,\n  Layers: <Layers size={20} />,\n  LinkIcon: <LinkIcon size={20} />,\n};\n\nexport const THEMES = {\n  'deep-space': 'from-slate-900 via-slate-800 to-slate-900',\n  'aurora': 'from-emerald-900 via-teal-950 to-cyan-900',\n  'sunset': 'from-orange-900 via-red-950 to-purple-900',\n  'minimal': 'from-zinc-900 via-stone-900 to-black'\n};\n\nexport { \n  Github, \n  Twitter, \n  Linkedin, \n  Instagram, \n  Youtube, \n  Globe, \n  Mail, \n  Layers, \n  Sparkles, \n  LinkIcon, \n  Palette, \n  User, \n  Plus, \n  Trash2, \n  ExternalLink, \n  ChevronRight,\n  Zap \n};\n"
+            }
+          ]
+        },
+        {
+          "path": "services/geminiService.ts",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Service for interacting with the Gemini API to optimize profile content.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport { GoogleGenAI, Type } from \"@google/genai\";\n\nconst ai = new GoogleGenAI({ apiKey: process.env.API_KEY });\n\nexport const optimizeBio = async (currentBio: string, interests: string): Promise<string> => {\n  try {\n    const response = await ai.models.generateContent({\n      model: 'gemini-3-flash-preview',\n      contents: `Improve the following Linktree bio to be more engaging, professional, and concise. \n      Original Bio: \"${currentBio}\"\n      Additional Context/Interests: \"${interests}\"\n      Keep the bio under 160 characters. Return only the new bio text.`,\n    });\n    return response.text || currentBio;\n  } catch (error) {\n    console.error(\"Gemini optimization failed:\", error);\n    return currentBio;\n  }\n};\n\nexport const suggestLinks = async (bio: string): Promise<any[]> => {\n  try {\n    const response = await ai.models.generateContent({\n      model: 'gemini-3-flash-preview',\n      contents: `Based on this user bio: \"${bio}\", suggest 3 relevant placeholder link titles and icons (from: Github, Twitter, Linkedin, Instagram, Youtube, Globe, Mail).`,\n      config: {\n        responseMimeType: \"application/json\",\n        responseSchema: {\n          type: Type.ARRAY,\n          items: {\n            type: Type.OBJECT,\n            properties: {\n              title: { type: Type.STRING },\n              icon: { type: Type.STRING },\n              url: { type: Type.STRING }\n            },\n            required: [\"title\", \"icon\", \"url\"]\n          }\n        }\n      }\n    });\n    return JSON.parse(response.text || '[]');\n  } catch (error) {\n    return [];\n  }\n};\n"
+            }
+          ]
+        },
+        {
+          "path": "components/LinkCard.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "A styled link component for the public view.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { LinkItem } from '../types';\nimport { ICON_MAP, ChevronRight } from '../constants';\n\ninterface LinkCardProps {\n  link: LinkItem;\n}\n\nconst LinkCard: React.FC<LinkCardProps> = ({ link }) => {\n  if (!link.active) return null;\n\n  return (\n    <a\n      href={link.url}\n      target=\"_blank\"\n      rel=\"noopener noreferrer\"\n      className=\"w-full flex items-center justify-between p-4 glass-card rounded-2xl mb-4 group animate-fade-in\"\n    >\n      <div className=\"flex items-center space-x-4\">\n        <div className=\"p-2 bg-white/5 rounded-xl group-hover:bg-white/10 transition-colors\">\n          {link.icon && ICON_MAP[link.icon] ? ICON_MAP[link.icon] : ICON_MAP['LinkIcon']}\n        </div>\n        <span className=\"font-medium text-white/90 group-hover:text-white\">{link.title}</span>\n      </div>\n      <ChevronRight size={18} className=\"text-white/30 group-hover:text-white/60 transition-colors\" />\n    </a>\n  );\n};\n\nexport default LinkCard;\n"
+            }
+          ]
+        },
+        {
+          "path": "components/AdminPanel.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "The editing interface for managing profile and links.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from '../types';\nimport { \n  User, \n  Palette, \n  Layers, \n  Plus, \n  Trash2, \n  Sparkles, \n  Zap,\n  Globe,\n  Github,\n  Twitter,\n  Linkedin,\n  Instagram,\n  Youtube,\n  Mail\n} from '../constants';\nimport { optimizeBio } from '../services/geminiService';\n\ninterface AdminPanelProps {\n  profile: UserProfile;\n  setProfile: React.Dispatch<React.SetStateAction<UserProfile>>;\n  links: LinkItem[];\n  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;\n}\n\nconst AdminPanel: React.FC<AdminPanelProps> = ({ profile, setProfile, links, setLinks }) => {\n  const [activeTab, setActiveTab] = useState<'profile' | 'links' | 'appearance'>('profile');\n  const [isOptimizing, setIsOptimizing] = useState(false);\n  const [interestInput, setInterestInput] = useState('');\n\n  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {\n    const { name, value } = e.target;\n    setProfile(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleOptimizeBio = async () => {\n    setIsOptimizing(true);\n    const optimized = await optimizeBio(profile.bio, interestInput);\n    setProfile(prev => ({ ...prev, bio: optimized }));\n    setIsOptimizing(false);\n  };\n\n  const addLink = () => {\n    const newLink: LinkItem = {\n      id: Date.now().toString(),\n      title: 'New Link',\n      url: 'https://',\n      icon: 'Globe',\n      active: true\n    };\n    setLinks([...links, newLink]);\n  };\n\n  const updateLink = (id: string, updates: Partial<LinkItem>) => {\n    setLinks(links.map(l => l.id === id ? { ...l, ...updates } : l));\n  };\n\n  const removeLink = (id: string) => {\n    setLinks(links.filter(l => l.id !== id));\n  };\n\n  return (\n    <div className=\"flex flex-col h-full bg-slate-900 border-r border-white/10 w-full md:w-96 overflow-y-auto\">\n      {/* Sidebar Header */}\n      <div className=\"p-6 border-b border-white/10 flex items-center justify-between\">\n        <h1 className=\"text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent\">LuminaTree Editor</h1>\n        <div className=\"px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded uppercase tracking-wider\">Draft</div>\n      </div>\n\n      {/* Tabs */}\n      <div className=\"flex border-b border-white/10\">\n        <button \n          onClick={() => setActiveTab('profile')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'profile' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <User size={18} />\n          <span className=\"text-sm font-medium\">Profile</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('links')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'links' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Layers size={18} />\n          <span className=\"text-sm font-medium\">Links</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('appearance')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'appearance' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Palette size={18} />\n          <span className=\"text-sm font-medium\">Design</span>\n        </button>\n      </div>\n\n      {/* Content */}\n      <div className=\"p-6 space-y-6\">\n        {activeTab === 'profile' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Display Name</label>\n              <input \n                type=\"text\" \n                name=\"name\"\n                value={profile.name}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Profile Bio</label>\n              <textarea \n                name=\"bio\"\n                value={profile.bio}\n                onChange={handleProfileChange}\n                rows={3}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none\"\n              />\n            </div>\n            \n            {/* AI Optimization Section */}\n            <div className=\"bg-gradient-to-br from-indigo-900/40 to-slate-800 p-4 rounded-2xl border border-indigo-500/20\">\n              <div className=\"flex items-center space-x-2 mb-3\">\n                <Sparkles className=\"text-indigo-400\" size={16} />\n                <h3 className=\"text-xs font-bold text-indigo-200 uppercase tracking-widest\">AI Bio Optimizer</h3>\n              </div>\n              <input \n                type=\"text\"\n                placeholder=\"Add interests (e.g. Hiking, Web3, Chess)\"\n                value={interestInput}\n                onChange={(e) => setInterestInput(e.target.value)}\n                className=\"w-full bg-slate-900/50 border border-indigo-500/30 rounded-lg p-2 text-xs mb-3 focus:ring-1 focus:ring-indigo-500 outline-none\"\n              />\n              <button \n                onClick={handleOptimizeBio}\n                disabled={isOptimizing}\n                className=\"w-full flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold p-2.5 rounded-xl transition-all shadow-lg shadow-indigo-500/20\"\n              >\n                {isOptimizing ? <Zap className=\"animate-spin\" size={14} /> : <Zap size={14} />}\n                <span>{isOptimizing ? 'Optimizing...' : 'Revamp with Gemini AI'}</span>\n              </button>\n            </div>\n\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Avatar URL</label>\n              <input \n                type=\"text\" \n                name=\"avatarUrl\"\n                value={profile.avatarUrl}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'links' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <button \n              onClick={addLink}\n              className=\"w-full flex items-center justify-center space-x-2 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 text-slate-300 hover:text-blue-400 p-4 rounded-2xl transition-all group\"\n            >\n              <Plus size={20} className=\"group-hover:rotate-90 transition-transform\" />\n              <span className=\"font-semibold text-sm\">Add New Link</span>\n            </button>\n            \n            <div className=\"space-y-3\">\n              {links.map((link) => (\n                <div key={link.id} className=\"bg-slate-800 border border-white/10 rounded-2xl p-4 space-y-3\">\n                  <div className=\"flex items-center justify-between\">\n                    <input \n                      type=\"text\" \n                      value={link.title}\n                      onChange={(e) => updateLink(link.id, { title: e.target.value })}\n                      className=\"bg-transparent border-none p-0 text-sm font-bold text-white focus:ring-0 w-full\"\n                    />\n                    <button \n                      onClick={() => removeLink(link.id)}\n                      className=\"text-slate-500 hover:text-red-400 transition-colors p-1\"\n                    >\n                      <Trash2 size={16} />\n                    </button>\n                  </div>\n                  <input \n                    type=\"text\" \n                    value={link.url}\n                    onChange={(e) => updateLink(link.id, { url: e.target.value })}\n                    className=\"w-full bg-slate-900 border border-white/5 rounded-lg p-2 text-xs text-blue-400 outline-none\"\n                    placeholder=\"URL (https://...)\"\n                  />\n                  <div className=\"flex items-center space-x-2 overflow-x-auto pb-1\">\n                    {['Globe', 'Github', 'Twitter', 'Linkedin', 'Instagram', 'Youtube', 'Mail'].map(iconName => (\n                      <button\n                        key={iconName}\n                        onClick={() => updateLink(link.id, { icon: iconName })}\n                        className={`p-2 rounded-lg transition-all ${link.icon === iconName ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-500 hover:text-slate-300'}`}\n                      >\n                        {/* Simplified Icons for selector */}\n                        <div className=\"w-4 h-4 flex items-center justify-center\">\n                          {iconName === 'Globe' && <Globe size={14} />}\n                          {iconName === 'Github' && <Github size={14} />}\n                          {iconName === 'Twitter' && <Twitter size={14} />}\n                          {iconName === 'Linkedin' && <Linkedin size={14} />}\n                          {iconName === 'Instagram' && <Instagram size={14} />}\n                          {iconName === 'Youtube' && <Youtube size={14} />}\n                          {iconName === 'Mail' && <Mail size={14} />}\n                        </div>\n                      </button>\n                    ))}\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'appearance' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Choose Background Theme</label>\n            <div className=\"grid grid-cols-2 gap-3\">\n              {(Object.keys(ThemeType) as Array<keyof typeof ThemeType>).map((key) => {\n                const themeValue = ThemeType[key];\n                return (\n                  <button\n                    key={themeValue}\n                    onClick={() => setProfile(prev => ({ ...prev, theme: themeValue }))}\n                    className={`h-24 rounded-2xl border-2 transition-all overflow-hidden relative ${profile.theme === themeValue ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-white/5 opacity-70 hover:opacity-100'}`}\n                  >\n                    <div className={`w-full h-full bg-gradient-to-br ${themeValue === 'deep-space' ? 'from-slate-900 to-slate-800' : themeValue === 'aurora' ? 'from-emerald-900 to-cyan-900' : themeValue === 'sunset' ? 'from-orange-900 to-purple-900' : 'from-zinc-900 to-black'}`}></div>\n                    <div className=\"absolute inset-0 flex items-center justify-center bg-black/20\">\n                      <span className=\"text-[10px] font-bold uppercase tracking-wider text-white\">{key.replace('_', ' ')}</span>\n                    </div>\n                  </button>\n                );\n              })}\n            </div>\n          </div>\n        )}\n      </div>\n      \n      {/* Footer */}\n      <div className=\"mt-auto p-6 border-t border-white/10\">\n        <p className=\"text-[10px] text-slate-500 text-center\">Changes are saved locally in your browser session.</p>\n      </div>\n    </div>\n  );\n};\n\nexport default AdminPanel;\n"
+            }
+          ]
+        },
+        {
+          "path": "App.tsx",
+          "generationType": 0,
+          "isDone": true,
+          "description": "Main application component managing state and layout.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useEffect } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from './types';\nimport { INITIAL_LINKS, INITIAL_PROFILE, THEMES, Github, Instagram, Twitter, Mail } from './constants';\nimport LinkCard from './components/LinkCard';\nimport AdminPanel from './components/AdminPanel';\n\nconst App: React.FC = () => {\n  const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);\n  const [links, setLinks] = useState<LinkItem[]>(INITIAL_LINKS);\n  const [isPreview, setIsPreview] = useState(false);\n\n  // Sync state with some visual transitions\n  useEffect(() => {\n    // We could persist to localStorage here if desired\n  }, [profile, links]);\n\n  return (\n    <div className=\"flex flex-col md:flex-row h-screen overflow-hidden bg-slate-950 font-sans\">\n      \n      {/* Admin Panel (Mobile-First Hidden in Preview Mode) */}\n      {!isPreview && (\n        <AdminPanel \n          profile={profile} \n          setProfile={setProfile} \n          links={links} \n          setLinks={setLinks} \n        />\n      )}\n\n      {/* Main Preview Area */}\n      <div className={`flex-1 relative overflow-y-auto bg-gradient-to-b ${THEMES[profile.theme as keyof typeof THEMES] || THEMES['deep-space']} transition-all duration-700 ease-in-out`}>\n        \n        {/* Mobile Preview Header */}\n        <div className=\"sticky top-0 z-50 p-4 flex justify-between items-center md:px-8\">\n          <div className=\"flex items-center space-x-2\">\n             <div className=\"w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20\">\n               <span className=\"text-sm font-bold text-white\">L</span>\n             </div>\n             <span className=\"text-xs font-semibold text-white/50 hidden md:block\">LuminaTree Live Preview</span>\n          </div>\n          <button \n            onClick={() => setIsPreview(!isPreview)}\n            className=\"px-4 py-2 glass rounded-full text-xs font-bold hover:bg-white/10 transition-all border border-white/10 text-white\"\n          >\n            {isPreview ? 'Back to Editor' : 'Toggle Preview Mode'}\n          </button>\n        </div>\n\n        {/* Public Landing Page View */}\n        <div className=\"max-w-xl mx-auto px-6 py-12 md:py-24 flex flex-col items-center\">\n          \n          {/* Profile Section */}\n          <div className=\"text-center mb-10 group\">\n            <div className=\"relative inline-block mb-6\">\n              <div className=\"absolute -inset-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000\"></div>\n              <img \n                src={profile.avatarUrl} \n                alt={profile.name} \n                className=\"relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl\"\n              />\n            </div>\n            <h2 className=\"text-3xl font-bold text-white mb-2 tracking-tight\">{profile.name}</h2>\n            <p className=\"text-slate-300 text-sm max-w-sm mx-auto leading-relaxed font-light\">\n              {profile.bio}\n            </p>\n          </div>\n\n          {/* Links List */}\n          <div className=\"w-full space-y-4\">\n            {links.filter(l => l.active).map((link) => (\n              <LinkCard key={link.id} link={link} />\n            ))}\n          </div>\n\n          {/* Social Icons Footer */}\n          <div className=\"mt-16 flex items-center justify-center space-x-6\">\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Instagram size={22} /></a>\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Twitter size={22} /></a>\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Github size={22} /></a>\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Mail size={22} /></a>\n          </div>\n\n          <div className=\"mt-16 pb-12\">\n            <div className=\"glass px-4 py-2 rounded-full flex items-center space-x-2 border border-white/5\">\n              <div className=\"w-2 h-2 rounded-full bg-emerald-500 animate-pulse\"></div>\n              <span className=\"text-[10px] uppercase font-bold tracking-[0.2em] text-white/40\">Powered by Gemini AI</span>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default App;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771500863,
+      "nanos": 843000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771500864,
+      "nanos": 500000000
+    }
+  },
+  {
+    "id": 4,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "instead of using Avatar UR, i want users to be able to upload their picture from there galley",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501193,
+      "nanos": 559000000
+    }
+  },
+  {
+    "id": 5,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Considering File Uploads**\n\nI'm currently focused on transitioning the \"Avatar URL\" input to a file upload feature. This shift requires integrating file handling. I've noted the necessity of requesting `camera` permission in `metadata.json`, which could be used to directly access the user's gallery in the navigator, even though the feature might be used for \"uploading\" files instead. This is a key step to ensure that users can upload their own pictures.\n\n\n**Refining File Upload Implementation**\n\nI've made progress refining the file upload feature. I realized `camera` permission in `metadata.json` isn't strictly necessary for a standard file input, but users often prefer direct photo capture. I've updated my approach to use a standard file input, usable for gallery access or direct photo captures. The state structure in `App.tsx` remains untouched. I've focused on UI modifications in `AdminPanel.tsx`, replacing the URL input with a custom styled file input and a preview. I am working on using `FileReader` within the `handleFileChange` function, to convert the file into a base64 string.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501193,
+      "nanos": 559000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501200,
+      "nanos": 284000000
+    }
+  },
+  {
+    "id": 6,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "components/AdminPanel.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Replace Avatar URL input with a gallery file upload feature. Added preview and base64 file handling.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useRef } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from '../types';\nimport { \n  User, \n  Palette, \n  Layers, \n  Plus, \n  Trash2, \n  Sparkles, \n  Zap,\n  Globe,\n  Github,\n  Twitter,\n  Linkedin,\n  Instagram,\n  Youtube,\n  Mail,\n  Plus as PlusIcon\n} from '../constants';\nimport { optimizeBio } from '../services/geminiService';\n\ninterface AdminPanelProps {\n  profile: UserProfile;\n  setProfile: React.Dispatch<React.SetStateAction<UserProfile>>;\n  links: LinkItem[];\n  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;\n}\n\nconst AdminPanel: React.FC<AdminPanelProps> = ({ profile, setProfile, links, setLinks }) => {\n  const [activeTab, setActiveTab] = useState<'profile' | 'links' | 'appearance'>('profile');\n  const [isOptimizing, setIsOptimizing] = useState(false);\n  const [interestInput, setInterestInput] = useState('');\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {\n    const { name, value } = e.target;\n    setProfile(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    const file = e.target.files?.[0];\n    if (file) {\n      const reader = new FileReader();\n      reader.onloadend = () => {\n        setProfile(prev => ({ ...prev, avatarUrl: reader.result as string }));\n      };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  const handleOptimizeBio = async () => {\n    setIsOptimizing(true);\n    const optimized = await optimizeBio(profile.bio, interestInput);\n    setProfile(prev => ({ ...prev, bio: optimized }));\n    setIsOptimizing(false);\n  };\n\n  const addLink = () => {\n    const newLink: LinkItem = {\n      id: Date.now().toString(),\n      title: 'New Link',\n      url: 'https://',\n      icon: 'Globe',\n      active: true\n    };\n    setLinks([...links, newLink]);\n  };\n\n  const updateLink = (id: string, updates: Partial<LinkItem>) => {\n    setLinks(links.map(l => l.id === id ? { ...l, ...updates } : l));\n  };\n\n  const removeLink = (id: string) => {\n    setLinks(links.filter(l => l.id !== id));\n  };\n\n  return (\n    <div className=\"flex flex-col h-full bg-slate-900 border-r border-white/10 w-full md:w-96 overflow-y-auto\">\n      {/* Sidebar Header */}\n      <div className=\"p-6 border-b border-white/10 flex items-center justify-between\">\n        <h1 className=\"text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent\">LuminaTree Editor</h1>\n        <div className=\"px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded uppercase tracking-wider\">Draft</div>\n      </div>\n\n      {/* Tabs */}\n      <div className=\"flex border-b border-white/10\">\n        <button \n          onClick={() => setActiveTab('profile')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'profile' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <User size={18} />\n          <span className=\"text-sm font-medium\">Profile</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('links')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'links' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Layers size={18} />\n          <span className=\"text-sm font-medium\">Links</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('appearance')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'appearance' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Palette size={18} />\n          <span className=\"text-sm font-medium\">Design</span>\n        </button>\n      </div>\n\n      {/* Content */}\n      <div className=\"p-6 space-y-6\">\n        {activeTab === 'profile' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            {/* Avatar Upload Section */}\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-3\">Profile Picture</label>\n              <div className=\"flex items-center space-x-4\">\n                <div className=\"relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 group bg-slate-800\">\n                  <img src={profile.avatarUrl} alt=\"Avatar\" className=\"w-full h-full object-cover\" />\n                  <button \n                    onClick={() => fileInputRef.current?.click()}\n                    className=\"absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity\"\n                  >\n                    <PlusIcon size={16} className=\"text-white\" />\n                  </button>\n                </div>\n                <button \n                  onClick={() => fileInputRef.current?.click()}\n                  className=\"px-4 py-2 bg-slate-800 border border-white/10 hover:border-blue-500/50 rounded-xl text-xs font-semibold text-slate-300 transition-all\"\n                >\n                  Upload from Gallery\n                </button>\n                <input \n                  type=\"file\" \n                  ref={fileInputRef}\n                  onChange={handleFileChange}\n                  accept=\"image/*\"\n                  className=\"hidden\"\n                />\n              </div>\n            </div>\n\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Display Name</label>\n              <input \n                type=\"text\" \n                name=\"name\"\n                value={profile.name}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Profile Bio</label>\n              <textarea \n                name=\"bio\"\n                value={profile.bio}\n                onChange={handleProfileChange}\n                rows={3}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none\"\n              />\n            </div>\n            \n            {/* AI Optimization Section */}\n            <div className=\"bg-gradient-to-br from-indigo-900/40 to-slate-800 p-4 rounded-2xl border border-indigo-500/20\">\n              <div className=\"flex items-center space-x-2 mb-3\">\n                <Sparkles className=\"text-indigo-400\" size={16} />\n                <h3 className=\"text-xs font-bold text-indigo-200 uppercase tracking-widest\">AI Bio Optimizer</h3>\n              </div>\n              <input \n                type=\"text\"\n                placeholder=\"Add interests (e.g. Hiking, Web3, Chess)\"\n                value={interestInput}\n                onChange={(e) => setInterestInput(e.target.value)}\n                className=\"w-full bg-slate-900/50 border border-indigo-500/30 rounded-lg p-2 text-xs mb-3 focus:ring-1 focus:ring-indigo-500 outline-none\"\n              />\n              <button \n                onClick={handleOptimizeBio}\n                disabled={isOptimizing}\n                className=\"w-full flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold p-2.5 rounded-xl transition-all shadow-lg shadow-indigo-500/20\"\n              >\n                {isOptimizing ? <Zap className=\"animate-spin\" size={14} /> : <Zap size={14} />}\n                <span>{isOptimizing ? 'Optimizing...' : 'Revamp with Gemini AI'}</span>\n              </button>\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'links' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <button \n              onClick={addLink}\n              className=\"w-full flex items-center justify-center space-x-2 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 text-slate-300 hover:text-blue-400 p-4 rounded-2xl transition-all group\"\n            >\n              <Plus size={20} className=\"group-hover:rotate-90 transition-transform\" />\n              <span className=\"font-semibold text-sm\">Add New Link</span>\n            </button>\n            \n            <div className=\"space-y-3\">\n              {links.map((link) => (\n                <div key={link.id} className=\"bg-slate-800 border border-white/10 rounded-2xl p-4 space-y-3\">\n                  <div className=\"flex items-center justify-between\">\n                    <input \n                      type=\"text\" \n                      value={link.title}\n                      onChange={(e) => updateLink(link.id, { title: e.target.value })}\n                      className=\"bg-transparent border-none p-0 text-sm font-bold text-white focus:ring-0 w-full\"\n                    />\n                    <button \n                      onClick={() => removeLink(link.id)}\n                      className=\"text-slate-500 hover:text-red-400 transition-colors p-1\"\n                    >\n                      <Trash2 size={16} />\n                    </button>\n                  </div>\n                  <input \n                    type=\"text\" \n                    value={link.url}\n                    onChange={(e) => updateLink(link.id, { url: e.target.value })}\n                    className=\"w-full bg-slate-900 border border-white/5 rounded-lg p-2 text-xs text-blue-400 outline-none\"\n                    placeholder=\"URL (https://...)\"\n                  />\n                  <div className=\"flex items-center space-x-2 overflow-x-auto pb-1\">\n                    {['Globe', 'Github', 'Twitter', 'Linkedin', 'Instagram', 'Youtube', 'Mail'].map(iconName => (\n                      <button\n                        key={iconName}\n                        onClick={() => updateLink(link.id, { icon: iconName })}\n                        className={`p-2 rounded-lg transition-all ${link.icon === iconName ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-500 hover:text-slate-300'}`}\n                      >\n                        <div className=\"w-4 h-4 flex items-center justify-center\">\n                          {iconName === 'Globe' && <Globe size={14} />}\n                          {iconName === 'Github' && <Github size={14} />}\n                          {iconName === 'Twitter' && <Twitter size={14} />}\n                          {iconName === 'Linkedin' && <Linkedin size={14} />}\n                          {iconName === 'Instagram' && <Instagram size={14} />}\n                          {iconName === 'Youtube' && <Youtube size={14} />}\n                          {iconName === 'Mail' && <Mail size={14} />}\n                        </div>\n                      </button>\n                    ))}\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'appearance' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Choose Background Theme</label>\n            <div className=\"grid grid-cols-2 gap-3\">\n              {(Object.keys(ThemeType) as Array<keyof typeof ThemeType>).map((key) => {\n                const themeValue = ThemeType[key];\n                return (\n                  <button\n                    key={themeValue}\n                    onClick={() => setProfile(prev => ({ ...prev, theme: themeValue }))}\n                    className={`h-24 rounded-2xl border-2 transition-all overflow-hidden relative ${profile.theme === themeValue ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-white/5 opacity-70 hover:opacity-100'}`}\n                  >\n                    <div className={`w-full h-full bg-gradient-to-br ${themeValue === 'deep-space' ? 'from-slate-900 to-slate-800' : themeValue === 'aurora' ? 'from-emerald-900 to-cyan-900' : themeValue === 'sunset' ? 'from-orange-900 to-purple-900' : 'from-zinc-900 to-black'}`}></div>\n                    <div className=\"absolute inset-0 flex items-center justify-center bg-black/20\">\n                      <span className=\"text-[10px] font-bold uppercase tracking-wider text-white\">{key.replace('_', ' ')}</span>\n                    </div>\n                  </button>\n                );\n              })}\n            </div>\n          </div>\n        )}\n      </div>\n      \n      {/* Footer */}\n      <div className=\"mt-auto p-6 border-t border-white/10\">\n        <p className=\"text-[10px] text-slate-500 text-center\">Changes are saved locally in your browser session.</p>\n      </div>\n    </div>\n  );\n};\n\nexport default AdminPanel;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771501200,
+      "nanos": 284000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501218,
+      "nanos": 811000000
+    }
+  },
+  {
+    "id": 8,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "remove the AI Bio Optimizer",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501398,
+      "nanos": 727000000
+    }
+  },
+  {
+    "id": 9,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Pinpointing Removal Targets**\n\nI've identified the key areas for removing the \"AI Bio Optimizer.\" The `services/geminiService.ts` file is a primary target, housing the `optimizeBio` and `suggestLinks` functions, and a component under `/components/AdminPanel` may also be affected. I'm focusing on pinpointing all related calls and UI integrations. The next step is to strategize a way to implement the removal.\n\n\n**Refining Implementation Strategy**\n\nI'm now honing my strategy for the actual implementation. My focus is on ensuring a clean removal of the \"AI Bio Optimizer.\" I'll start by removing the `optimizeBio` export from `services/geminiService.ts`, assuming it's unused elsewhere, as the user requested. In the `AdminPanel.tsx` file, I plan to systematically remove the `isOptimizing` and `interestInput` states, the `handleOptimizeBio` function, and the corresponding JSX block. I'll also eliminate the now-unnecessary import of the `optimizeBio` function. Furthermore, I've confirmed `Sparkles` and `Zap` are used only in the optimizer section in `AdminPanel.tsx`. Therefore, I plan to remove those imports as well, unless they are used elsewhere in AdminPanel.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501398,
+      "nanos": 727000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501405,
+      "nanos": 137000000
+    }
+  },
+  {
+    "id": 10,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "components/AdminPanel.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Remove AI Bio Optimizer state, functions, and UI elements.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useRef } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from '../types';\nimport { \n  User, \n  Palette, \n  Layers, \n  Plus, \n  Trash2, \n  Globe,\n  Github,\n  Twitter,\n  Linkedin,\n  Instagram,\n  Youtube,\n  Mail,\n  Plus as PlusIcon\n} from '../constants';\n\ninterface AdminPanelProps {\n  profile: UserProfile;\n  setProfile: React.Dispatch<React.SetStateAction<UserProfile>>;\n  links: LinkItem[];\n  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;\n}\n\nconst AdminPanel: React.FC<AdminPanelProps> = ({ profile, setProfile, links, setLinks }) => {\n  const [activeTab, setActiveTab] = useState<'profile' | 'links' | 'appearance'>('profile');\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {\n    const { name, value } = e.target;\n    setProfile(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    const file = e.target.files?.[0];\n    if (file) {\n      const reader = new FileReader();\n      reader.onloadend = () => {\n        setProfile(prev => ({ ...prev, avatarUrl: reader.result as string }));\n      };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  const addLink = () => {\n    const newLink: LinkItem = {\n      id: Date.now().toString(),\n      title: 'New Link',\n      url: 'https://',\n      icon: 'Globe',\n      active: true\n    };\n    setLinks([...links, newLink]);\n  };\n\n  const updateLink = (id: string, updates: Partial<LinkItem>) => {\n    setLinks(links.map(l => l.id === id ? { ...l, ...updates } : l));\n  };\n\n  const removeLink = (id: string) => {\n    setLinks(links.filter(l => l.id !== id));\n  };\n\n  return (\n    <div className=\"flex flex-col h-full bg-slate-900 border-r border-white/10 w-full md:w-96 overflow-y-auto\">\n      {/* Sidebar Header */}\n      <div className=\"p-6 border-b border-white/10 flex items-center justify-between\">\n        <h1 className=\"text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent\">LuminaTree Editor</h1>\n        <div className=\"px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded uppercase tracking-wider\">Draft</div>\n      </div>\n\n      {/* Tabs */}\n      <div className=\"flex border-b border-white/10\">\n        <button \n          onClick={() => setActiveTab('profile')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'profile' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <User size={18} />\n          <span className=\"text-sm font-medium\">Profile</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('links')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'links' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Layers size={18} />\n          <span className=\"text-sm font-medium\">Links</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('appearance')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'appearance' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Palette size={18} />\n          <span className=\"text-sm font-medium\">Design</span>\n        </button>\n      </div>\n\n      {/* Content */}\n      <div className=\"p-6 space-y-6\">\n        {activeTab === 'profile' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            {/* Avatar Upload Section */}\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-3\">Profile Picture</label>\n              <div className=\"flex items-center space-x-4\">\n                <div className=\"relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 group bg-slate-800\">\n                  <img src={profile.avatarUrl} alt=\"Avatar\" className=\"w-full h-full object-cover\" />\n                  <button \n                    onClick={() => fileInputRef.current?.click()}\n                    className=\"absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity\"\n                  >\n                    <PlusIcon size={16} className=\"text-white\" />\n                  </button>\n                </div>\n                <button \n                  onClick={() => fileInputRef.current?.click()}\n                  className=\"px-4 py-2 bg-slate-800 border border-white/10 hover:border-blue-500/50 rounded-xl text-xs font-semibold text-slate-300 transition-all\"\n                >\n                  Upload from Gallery\n                </button>\n                <input \n                  type=\"file\" \n                  ref={fileInputRef}\n                  onChange={handleFileChange}\n                  accept=\"image/*\"\n                  className=\"hidden\"\n                />\n              </div>\n            </div>\n\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Display Name</label>\n              <input \n                type=\"text\" \n                name=\"name\"\n                value={profile.name}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Profile Bio</label>\n              <textarea \n                name=\"bio\"\n                value={profile.bio}\n                onChange={handleProfileChange}\n                rows={4}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none\"\n              />\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'links' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <button \n              onClick={addLink}\n              className=\"w-full flex items-center justify-center space-x-2 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 text-slate-300 hover:text-blue-400 p-4 rounded-2xl transition-all group\"\n            >\n              <Plus size={20} className=\"group-hover:rotate-90 transition-transform\" />\n              <span className=\"font-semibold text-sm\">Add New Link</span>\n            </button>\n            \n            <div className=\"space-y-3\">\n              {links.map((link) => (\n                <div key={link.id} className=\"bg-slate-800 border border-white/10 rounded-2xl p-4 space-y-3\">\n                  <div className=\"flex items-center justify-between\">\n                    <input \n                      type=\"text\" \n                      value={link.title}\n                      onChange={(e) => updateLink(link.id, { title: e.target.value })}\n                      className=\"bg-transparent border-none p-0 text-sm font-bold text-white focus:ring-0 w-full\"\n                    />\n                    <button \n                      onClick={() => removeLink(link.id)}\n                      className=\"text-slate-500 hover:text-red-400 transition-colors p-1\"\n                    >\n                      <Trash2 size={16} />\n                    </button>\n                  </div>\n                  <input \n                    type=\"text\" \n                    value={link.url}\n                    onChange={(e) => updateLink(link.id, { url: e.target.value })}\n                    className=\"w-full bg-slate-900 border border-white/5 rounded-lg p-2 text-xs text-blue-400 outline-none\"\n                    placeholder=\"URL (https://...)\"\n                  />\n                  <div className=\"flex items-center space-x-2 overflow-x-auto pb-1\">\n                    {['Globe', 'Github', 'Twitter', 'Linkedin', 'Instagram', 'Youtube', 'Mail'].map(iconName => (\n                      <button\n                        key={iconName}\n                        onClick={() => updateLink(link.id, { icon: iconName })}\n                        className={`p-2 rounded-lg transition-all ${link.icon === iconName ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-500 hover:text-slate-300'}`}\n                      >\n                        <div className=\"w-4 h-4 flex items-center justify-center\">\n                          {iconName === 'Globe' && <Globe size={14} />}\n                          {iconName === 'Github' && <Github size={14} />}\n                          {iconName === 'Twitter' && <Twitter size={14} />}\n                          {iconName === 'Linkedin' && <Linkedin size={14} />}\n                          {iconName === 'Instagram' && <Instagram size={14} />}\n                          {iconName === 'Youtube' && <Youtube size={14} />}\n                          {iconName === 'Mail' && <Mail size={14} />}\n                        </div>\n                      </button>\n                    ))}\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'appearance' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Choose Background Theme</label>\n            <div className=\"grid grid-cols-2 gap-3\">\n              {(Object.keys(ThemeType) as Array<keyof typeof ThemeType>).map((key) => {\n                const themeValue = ThemeType[key];\n                return (\n                  <button\n                    key={themeValue}\n                    onClick={() => setProfile(prev => ({ ...prev, theme: themeValue }))}\n                    className={`h-24 rounded-2xl border-2 transition-all overflow-hidden relative ${profile.theme === themeValue ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-white/5 opacity-70 hover:opacity-100'}`}\n                  >\n                    <div className={`w-full h-full bg-gradient-to-br ${themeValue === 'deep-space' ? 'from-slate-900 to-slate-800' : themeValue === 'aurora' ? 'from-emerald-900 to-cyan-900' : themeValue === 'sunset' ? 'from-orange-900 to-purple-900' : 'from-zinc-900 to-black'}`}></div>\n                    <div className=\"absolute inset-0 flex items-center justify-center bg-black/20\">\n                      <span className=\"text-[10px] font-bold uppercase tracking-wider text-white\">{key.replace('_', ' ')}</span>\n                    </div>\n                  </button>\n                );\n              })}\n            </div>\n          </div>\n        )}\n      </div>\n      \n      {/* Footer */}\n      <div className=\"mt-auto p-6 border-t border-white/10\">\n        <p className=\"text-[10px] text-slate-500 text-center\">Changes are saved locally in your browser session.</p>\n      </div>\n    </div>\n  );\n};\n\nexport default AdminPanel;\n"
+            }
+          ]
+        },
+        {
+          "path": "metadata.json",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Update app description to reflect the removal of the AI bio optimization feature.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\n{\n  \"name\": \"LuminaTree\",\n  \"description\": \"A high-end Linktree clone with glassmorphism design, real-time editing, and easy custom image uploads.\",\n  \"requestFramePermissions\": []\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771501405,
+      "nanos": 137000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501421,
+      "nanos": 79000000
+    }
+  },
+  {
+    "id": 12,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "in the link place, i want facebook and whatsapp to be an option",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501601,
+      "nanos": 894000000
+    }
+  },
+  {
+    "id": 13,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Considering Icon Options**\n\nOkay, I'm currently assessing the best approach for incorporating \"Facebook\" and \"WhatsApp\" icons. I'm focusing on how the `ICON_MAP` in `constants.tsx` handles icons from `lucide-react`, and how `AdminPanel.tsx` currently manages the icon name list. My goal is to add the new options efficiently without disrupting the existing structure.\n\n\n**Adding New Icons**\n\nI've decided to incorporate 'Facebook' and 'MessageCircle' icons from `lucide-react` to represent WhatsApp since a branded icon isn't standard. I'll update `constants.tsx` and the `ICON_MAP` with these new icons. Next, I will include 'Facebook' and 'Whatsapp' in the icon selection list within the `AdminPanel.tsx`'s 'links' tab.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501601,
+      "nanos": 895000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501607,
+      "nanos": 689000000
+    }
+  },
+  {
+    "id": 14,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "constants.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Import Facebook and MessageCircle icons from lucide-react and add them to the ICON_MAP for use in the application.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { \n  Github, \n  Twitter, \n  Linkedin, \n  Instagram, \n  Youtube, \n  Globe, \n  Mail, \n  Layers,\n  Sparkles,\n  Link as LinkIcon,\n  Palette,\n  User,\n  Plus,\n  Trash2,\n  ExternalLink,\n  ChevronRight,\n  Zap,\n  Facebook,\n  MessageCircle\n} from 'lucide-react';\nimport { LinkItem, UserProfile } from './types';\n\nexport const INITIAL_LINKS: LinkItem[] = [\n  { id: '1', title: 'Portfolio Website', url: 'https://example.com', icon: 'Globe', active: true },\n  { id: '2', title: 'My GitHub Profile', url: 'https://github.com', icon: 'Github', active: true },\n  { id: '3', title: 'Connect on LinkedIn', url: 'https://linkedin.com', icon: 'Linkedin', active: true },\n  { id: '4', title: 'Follow on Twitter', url: 'https://twitter.com', icon: 'Twitter', active: true },\n];\n\nexport const INITIAL_PROFILE: UserProfile = {\n  name: 'Alex Rivera',\n  bio: 'Full-stack developer & UI designer crafting digital experiences with purpose.',\n  avatarUrl: 'https://picsum.photos/id/64/200/200',\n  theme: 'deep-space'\n};\n\nexport const ICON_MAP: Record<string, React.ReactNode> = {\n  Github: <Github size={20} />,\n  Twitter: <Twitter size={20} />,\n  Linkedin: <Linkedin size={20} />,\n  Instagram: <Instagram size={20} />,\n  Youtube: <Youtube size={20} />,\n  Globe: <Globe size={20} />,\n  Mail: <Mail size={20} />,\n  Layers: <Layers size={20} />,\n  LinkIcon: <LinkIcon size={20} />,\n  Facebook: <Facebook size={20} />,\n  Whatsapp: <MessageCircle size={20} />,\n};\n\nexport const THEMES = {\n  'deep-space': 'from-slate-900 via-slate-800 to-slate-900',\n  'aurora': 'from-emerald-900 via-teal-950 to-cyan-900',\n  'sunset': 'from-orange-900 via-red-950 to-purple-900',\n  'minimal': 'from-zinc-900 via-stone-900 to-black'\n};\n\nexport { \n  Github, \n  Twitter, \n  Linkedin, \n  Instagram, \n  Youtube, \n  Globe, \n  Mail, \n  Layers, \n  Sparkles, \n  LinkIcon, \n  Palette, \n  User, \n  Plus, \n  Trash2, \n  ExternalLink, \n  ChevronRight,\n  Zap,\n  Facebook,\n  MessageCircle\n};\n"
+            }
+          ]
+        },
+        {
+          "path": "components/AdminPanel.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Add Facebook and Whatsapp to the list of available icons in the link editor.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useRef } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from '../types';\nimport { \n  User, \n  Palette, \n  Layers, \n  Plus, \n  Trash2, \n  Globe,\n  Github,\n  Twitter,\n  Linkedin,\n  Instagram,\n  Youtube,\n  Mail,\n  Plus as PlusIcon,\n  Facebook,\n  MessageCircle\n} from '../constants';\n\ninterface AdminPanelProps {\n  profile: UserProfile;\n  setProfile: React.Dispatch<React.SetStateAction<UserProfile>>;\n  links: LinkItem[];\n  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;\n}\n\nconst AdminPanel: React.FC<AdminPanelProps> = ({ profile, setProfile, links, setLinks }) => {\n  const [activeTab, setActiveTab] = useState<'profile' | 'links' | 'appearance'>('profile');\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {\n    const { name, value } = e.target;\n    setProfile(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    const file = e.target.files?.[0];\n    if (file) {\n      const reader = new FileReader();\n      reader.onloadend = () => {\n        setProfile(prev => ({ ...prev, avatarUrl: reader.result as string }));\n      };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  const addLink = () => {\n    const newLink: LinkItem = {\n      id: Date.now().toString(),\n      title: 'New Link',\n      url: 'https://',\n      icon: 'Globe',\n      active: true\n    };\n    setLinks([...links, newLink]);\n  };\n\n  const updateLink = (id: string, updates: Partial<LinkItem>) => {\n    setLinks(links.map(l => l.id === id ? { ...l, ...updates } : l));\n  };\n\n  const removeLink = (id: string) => {\n    setLinks(links.filter(l => l.id !== id));\n  };\n\n  return (\n    <div className=\"flex flex-col h-full bg-slate-900 border-r border-white/10 w-full md:w-96 overflow-y-auto\">\n      {/* Sidebar Header */}\n      <div className=\"p-6 border-b border-white/10 flex items-center justify-between\">\n        <h1 className=\"text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent\">LuminaTree Editor</h1>\n        <div className=\"px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded uppercase tracking-wider\">Draft</div>\n      </div>\n\n      {/* Tabs */}\n      <div className=\"flex border-b border-white/10\">\n        <button \n          onClick={() => setActiveTab('profile')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'profile' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <User size={18} />\n          <span className=\"text-sm font-medium\">Profile</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('links')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'links' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Layers size={18} />\n          <span className=\"text-sm font-medium\">Links</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('appearance')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'appearance' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Palette size={18} />\n          <span className=\"text-sm font-medium\">Design</span>\n        </button>\n      </div>\n\n      {/* Content */}\n      <div className=\"p-6 space-y-6\">\n        {activeTab === 'profile' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            {/* Avatar Upload Section */}\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-3\">Profile Picture</label>\n              <div className=\"flex items-center space-x-4\">\n                <div className=\"relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 group bg-slate-800\">\n                  <img src={profile.avatarUrl} alt=\"Avatar\" className=\"w-full h-full object-cover\" />\n                  <button \n                    onClick={() => fileInputRef.current?.click()}\n                    className=\"absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity\"\n                  >\n                    <PlusIcon size={16} className=\"text-white\" />\n                  </button>\n                </div>\n                <button \n                  onClick={() => fileInputRef.current?.click()}\n                  className=\"px-4 py-2 bg-slate-800 border border-white/10 hover:border-blue-500/50 rounded-xl text-xs font-semibold text-slate-300 transition-all\"\n                >\n                  Upload from Gallery\n                </button>\n                <input \n                  type=\"file\" \n                  ref={fileInputRef}\n                  onChange={handleFileChange}\n                  accept=\"image/*\"\n                  className=\"hidden\"\n                />\n              </div>\n            </div>\n\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Display Name</label>\n              <input \n                type=\"text\" \n                name=\"name\"\n                value={profile.name}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Profile Bio</label>\n              <textarea \n                name=\"bio\"\n                value={profile.bio}\n                onChange={handleProfileChange}\n                rows={4}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none\"\n              />\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'links' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <button \n              onClick={addLink}\n              className=\"w-full flex items-center justify-center space-x-2 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 text-slate-300 hover:text-blue-400 p-4 rounded-2xl transition-all group\"\n            >\n              <Plus size={20} className=\"group-hover:rotate-90 transition-transform\" />\n              <span className=\"font-semibold text-sm\">Add New Link</span>\n            </button>\n            \n            <div className=\"space-y-3\">\n              {links.map((link) => (\n                <div key={link.id} className=\"bg-slate-800 border border-white/10 rounded-2xl p-4 space-y-3\">\n                  <div className=\"flex items-center justify-between\">\n                    <input \n                      type=\"text\" \n                      value={link.title}\n                      onChange={(e) => updateLink(link.id, { title: e.target.value })}\n                      className=\"bg-transparent border-none p-0 text-sm font-bold text-white focus:ring-0 w-full\"\n                    />\n                    <button \n                      onClick={() => removeLink(link.id)}\n                      className=\"text-slate-500 hover:text-red-400 transition-colors p-1\"\n                    >\n                      <Trash2 size={16} />\n                    </button>\n                  </div>\n                  <input \n                    type=\"text\" \n                    value={link.url}\n                    onChange={(e) => updateLink(link.id, { url: e.target.value })}\n                    className=\"w-full bg-slate-900 border border-white/5 rounded-lg p-2 text-xs text-blue-400 outline-none\"\n                    placeholder=\"URL (https://...)\"\n                  />\n                  <div className=\"flex items-center space-x-2 overflow-x-auto pb-1\">\n                    {['Globe', 'Github', 'Twitter', 'Linkedin', 'Instagram', 'Youtube', 'Mail', 'Facebook', 'Whatsapp'].map(iconName => (\n                      <button\n                        key={iconName}\n                        onClick={() => updateLink(link.id, { icon: iconName })}\n                        className={`p-2 rounded-lg transition-all ${link.icon === iconName ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-500 hover:text-slate-300'}`}\n                        title={iconName}\n                      >\n                        <div className=\"w-4 h-4 flex items-center justify-center\">\n                          {iconName === 'Globe' && <Globe size={14} />}\n                          {iconName === 'Github' && <Github size={14} />}\n                          {iconName === 'Twitter' && <Twitter size={14} />}\n                          {iconName === 'Linkedin' && <Linkedin size={14} />}\n                          {iconName === 'Instagram' && <Instagram size={14} />}\n                          {iconName === 'Youtube' && <Youtube size={14} />}\n                          {iconName === 'Mail' && <Mail size={14} />}\n                          {iconName === 'Facebook' && <Facebook size={14} />}\n                          {iconName === 'Whatsapp' && <MessageCircle size={14} />}\n                        </div>\n                      </button>\n                    ))}\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'appearance' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Choose Background Theme</label>\n            <div className=\"grid grid-cols-2 gap-3\">\n              {(Object.keys(ThemeType) as Array<keyof typeof ThemeType>).map((key) => {\n                const themeValue = ThemeType[key];\n                return (\n                  <button\n                    key={themeValue}\n                    onClick={() => setProfile(prev => ({ ...prev, theme: themeValue }))}\n                    className={`h-24 rounded-2xl border-2 transition-all overflow-hidden relative ${profile.theme === themeValue ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-white/5 opacity-70 hover:opacity-100'}`}\n                  >\n                    <div className={`w-full h-full bg-gradient-to-br ${themeValue === 'deep-space' ? 'from-slate-900 to-slate-800' : themeValue === 'aurora' ? 'from-emerald-900 to-cyan-900' : themeValue === 'sunset' ? 'from-orange-900 to-purple-900' : 'from-zinc-900 to-black'}`}></div>\n                    <div className=\"absolute inset-0 flex items-center justify-center bg-black/20\">\n                      <span className=\"text-[10px] font-bold uppercase tracking-wider text-white\">{key.replace('_', ' ')}</span>\n                    </div>\n                  </button>\n                );\n              })}\n            </div>\n          </div>\n        )}\n      </div>\n      \n      {/* Footer */}\n      <div className=\"mt-auto p-6 border-t border-white/10\">\n        <p className=\"text-[10px] text-slate-500 text-center\">Changes are saved locally in your browser session.</p>\n      </div>\n    </div>\n  );\n};\n\nexport default AdminPanel;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771501607,
+      "nanos": 689000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501611,
+      "nanos": 786000000
+    }
+  },
+  {
+    "id": 16,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "remove \nPowered by Gemini AI from the client page",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501707,
+      "nanos": 75000000
+    }
+  },
+  {
+    "id": 17,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Removing Branding Elements**\n\nI'm focusing on removing the \"Powered by Gemini AI\" branding and its UI element, specifically the glass pill, from the landing page. My attention is on `App.tsx`, where these elements are likely rendered. I'm exploring the best way to modify the code to achieve the desired removal, maintaining the existing UI's integrity.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501707,
+      "nanos": 75000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501713,
+      "nanos": 319000000
+    }
+  },
+  {
+    "id": 18,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "App.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Remove the \"Powered by Gemini AI\" badge from the footer of the public preview page.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useEffect } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from './types';\nimport { INITIAL_LINKS, INITIAL_PROFILE, THEMES, Github, Instagram, Twitter, Mail } from './constants';\nimport LinkCard from './components/LinkCard';\nimport AdminPanel from './components/AdminPanel';\n\nconst App: React.FC = () => {\n  const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);\n  const [links, setLinks] = useState<LinkItem[]>(INITIAL_LINKS);\n  const [isPreview, setIsPreview] = useState(false);\n\n  // Sync state with some visual transitions\n  useEffect(() => {\n    // We could persist to localStorage here if desired\n  }, [profile, links]);\n\n  return (\n    <div className=\"flex flex-col md:flex-row h-screen overflow-hidden bg-slate-950 font-sans\">\n      \n      {/* Admin Panel (Mobile-First Hidden in Preview Mode) */}\n      {!isPreview && (\n        <AdminPanel \n          profile={profile} \n          setProfile={setProfile} \n          links={links} \n          setLinks={setLinks} \n        />\n      )}\n\n      {/* Main Preview Area */}\n      <div className={`flex-1 relative overflow-y-auto bg-gradient-to-b ${THEMES[profile.theme as keyof typeof THEMES] || THEMES['deep-space']} transition-all duration-700 ease-in-out`}>\n        \n        {/* Mobile Preview Header */}\n        <div className=\"sticky top-0 z-50 p-4 flex justify-between items-center md:px-8\">\n          <div className=\"flex items-center space-x-2\">\n             <div className=\"w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20\">\n               <span className=\"text-sm font-bold text-white\">L</span>\n             </div>\n             <span className=\"text-xs font-semibold text-white/50 hidden md:block\">LuminaTree Live Preview</span>\n          </div>\n          <button \n            onClick={() => setIsPreview(!isPreview)}\n            className=\"px-4 py-2 glass rounded-full text-xs font-bold hover:bg-white/10 transition-all border border-white/10 text-white\"\n          >\n            {isPreview ? 'Back to Editor' : 'Toggle Preview Mode'}\n          </button>\n        </div>\n\n        {/* Public Landing Page View */}\n        <div className=\"max-w-xl mx-auto px-6 py-12 md:py-24 flex flex-col items-center\">\n          \n          {/* Profile Section */}\n          <div className=\"text-center mb-10 group\">\n            <div className=\"relative inline-block mb-6\">\n              <div className=\"absolute -inset-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000\"></div>\n              <img \n                src={profile.avatarUrl} \n                alt={profile.name} \n                className=\"relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl\"\n              />\n            </div>\n            <h2 className=\"text-3xl font-bold text-white mb-2 tracking-tight\">{profile.name}</h2>\n            <p className=\"text-slate-300 text-sm max-w-sm mx-auto leading-relaxed font-light\">\n              {profile.bio}\n            </p>\n          </div>\n\n          {/* Links List */}\n          <div className=\"w-full space-y-4\">\n            {links.filter(l => l.active).map((link) => (\n              <LinkCard key={link.id} link={link} />\n            ))}\n          </div>\n\n          {/* Social Icons Footer */}\n          <div className=\"mt-16 pb-12 flex items-center justify-center space-x-6\">\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Instagram size={22} /></a>\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Twitter size={22} /></a>\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Github size={22} /></a>\n            <a href=\"#\" className=\"text-white/40 hover:text-white transition-colors\"><Mail size={22} /></a>\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default App;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771501713,
+      "nanos": 319000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501719,
+      "nanos": 439000000
+    }
+  },
+  {
+    "id": 20,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "remove Editor from the name of the site",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501832,
+      "nanos": 641000000
+    }
+  },
+  {
+    "id": 21,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Analyzing Site Name Change**\n\nI'm currently reviewing the codebase to facilitate removing \"Editor\" from the site's name. I've found the title tag in `index.html` and a header in `AdminPanel.tsx` that will need modification. I plan to also search for other potential instances of the phrase, for a complete change.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501832,
+      "nanos": 641000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501839,
+      "nanos": 666000000
+    }
+  },
+  {
+    "id": 22,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "components/AdminPanel.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Remove the word 'Editor' from the application title in the admin sidebar.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useRef } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from '../types';\nimport { \n  User, \n  Palette, \n  Layers, \n  Plus, \n  Trash2, \n  Globe,\n  Github,\n  Twitter,\n  Linkedin,\n  Instagram,\n  Youtube,\n  Mail,\n  Plus as PlusIcon,\n  Facebook,\n  MessageCircle\n} from '../constants';\n\ninterface AdminPanelProps {\n  profile: UserProfile;\n  setProfile: React.Dispatch<React.SetStateAction<UserProfile>>;\n  links: LinkItem[];\n  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;\n}\n\nconst AdminPanel: React.FC<AdminPanelProps> = ({ profile, setProfile, links, setLinks }) => {\n  const [activeTab, setActiveTab] = useState<'profile' | 'links' | 'appearance'>('profile');\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {\n    const { name, value } = e.target;\n    setProfile(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    const file = e.target.files?.[0];\n    if (file) {\n      const reader = new FileReader();\n      reader.onloadend = () => {\n        setProfile(prev => ({ ...prev, avatarUrl: reader.result as string }));\n      };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  const addLink = () => {\n    const newLink: LinkItem = {\n      id: Date.now().toString(),\n      title: 'New Link',\n      url: 'https://',\n      icon: 'Globe',\n      active: true\n    };\n    setLinks([...links, newLink]);\n  };\n\n  const updateLink = (id: string, updates: Partial<LinkItem>) => {\n    setLinks(links.map(l => l.id === id ? { ...l, ...updates } : l));\n  };\n\n  const removeLink = (id: string) => {\n    setLinks(links.filter(l => l.id !== id));\n  };\n\n  return (\n    <div className=\"flex flex-col h-full bg-slate-900 border-r border-white/10 w-full md:w-96 overflow-y-auto\">\n      {/* Sidebar Header */}\n      <div className=\"p-6 border-b border-white/10 flex items-center justify-between\">\n        <h1 className=\"text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent\">LuminaTree</h1>\n        <div className=\"px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded uppercase tracking-wider\">Draft</div>\n      </div>\n\n      {/* Tabs */}\n      <div className=\"flex border-b border-white/10\">\n        <button \n          onClick={() => setActiveTab('profile')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'profile' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <User size={18} />\n          <span className=\"text-sm font-medium\">Profile</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('links')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'links' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Layers size={18} />\n          <span className=\"text-sm font-medium\">Links</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('appearance')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'appearance' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Palette size={18} />\n          <span className=\"text-sm font-medium\">Design</span>\n        </button>\n      </div>\n\n      {/* Content */}\n      <div className=\"p-6 space-y-6\">\n        {activeTab === 'profile' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            {/* Avatar Upload Section */}\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-3\">Profile Picture</label>\n              <div className=\"flex items-center space-x-4\">\n                <div className=\"relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 group bg-slate-800\">\n                  <img src={profile.avatarUrl} alt=\"Avatar\" className=\"w-full h-full object-cover\" />\n                  <button \n                    onClick={() => fileInputRef.current?.click()}\n                    className=\"absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity\"\n                  >\n                    <PlusIcon size={16} className=\"text-white\" />\n                  </button>\n                </div>\n                <button \n                  onClick={() => fileInputRef.current?.click()}\n                  className=\"px-4 py-2 bg-slate-800 border border-white/10 hover:border-blue-500/50 rounded-xl text-xs font-semibold text-slate-300 transition-all\"\n                >\n                  Upload from Gallery\n                </button>\n                <input \n                  type=\"file\" \n                  ref={fileInputRef}\n                  onChange={handleFileChange}\n                  accept=\"image/*\"\n                  className=\"hidden\"\n                />\n              </div>\n            </div>\n\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Display Name</label>\n              <input \n                type=\"text\" \n                name=\"name\"\n                value={profile.name}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Profile Bio</label>\n              <textarea \n                name=\"bio\"\n                value={profile.bio}\n                onChange={handleProfileChange}\n                rows={4}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none\"\n              />\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'links' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <button \n              onClick={addLink}\n              className=\"w-full flex items-center justify-center space-x-2 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 text-slate-300 hover:text-blue-400 p-4 rounded-2xl transition-all group\"\n            >\n              <Plus size={20} className=\"group-hover:rotate-90 transition-transform\" />\n              <span className=\"font-semibold text-sm\">Add New Link</span>\n            </button>\n            \n            <div className=\"space-y-3\">\n              {links.map((link) => (\n                <div key={link.id} className=\"bg-slate-800 border border-white/10 rounded-2xl p-4 space-y-3\">\n                  <div className=\"flex items-center justify-between\">\n                    <input \n                      type=\"text\" \n                      value={link.title}\n                      onChange={(e) => updateLink(link.id, { title: e.target.value })}\n                      className=\"bg-transparent border-none p-0 text-sm font-bold text-white focus:ring-0 w-full\"\n                    />\n                    <button \n                      onClick={() => removeLink(link.id)}\n                      className=\"text-slate-500 hover:text-red-400 transition-colors p-1\"\n                    >\n                      <Trash2 size={16} />\n                    </button>\n                  </div>\n                  <input \n                    type=\"text\" \n                    value={link.url}\n                    onChange={(e) => updateLink(link.id, { url: e.target.value })}\n                    className=\"w-full bg-slate-900 border border-white/5 rounded-lg p-2 text-xs text-blue-400 outline-none\"\n                    placeholder=\"URL (https://...)\"\n                  />\n                  <div className=\"flex items-center space-x-2 overflow-x-auto pb-1\">\n                    {['Globe', 'Github', 'Twitter', 'Linkedin', 'Instagram', 'Youtube', 'Mail', 'Facebook', 'Whatsapp'].map(iconName => (\n                      <button\n                        key={iconName}\n                        onClick={() => updateLink(link.id, { icon: iconName })}\n                        className={`p-2 rounded-lg transition-all ${link.icon === iconName ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-500 hover:text-slate-300'}`}\n                        title={iconName}\n                      >\n                        <div className=\"w-4 h-4 flex items-center justify-center\">\n                          {iconName === 'Globe' && <Globe size={14} />}\n                          {iconName === 'Github' && <Github size={14} />}\n                          {iconName === 'Twitter' && <Twitter size={14} />}\n                          {iconName === 'Linkedin' && <Linkedin size={14} />}\n                          {iconName === 'Instagram' && <Instagram size={14} />}\n                          {iconName === 'Youtube' && <Youtube size={14} />}\n                          {iconName === 'Mail' && <Mail size={14} />}\n                          {iconName === 'Facebook' && <Facebook size={14} />}\n                          {iconName === 'Whatsapp' && <MessageCircle size={14} />}\n                        </div>\n                      </button>\n                    ))}\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'appearance' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Choose Background Theme</label>\n            <div className=\"grid grid-cols-2 gap-3\">\n              {(Object.keys(ThemeType) as Array<keyof typeof ThemeType>).map((key) => {\n                const themeValue = ThemeType[key];\n                return (\n                  <button\n                    key={themeValue}\n                    onClick={() => setProfile(prev => ({ ...prev, theme: themeValue }))}\n                    className={`h-24 rounded-2xl border-2 transition-all overflow-hidden relative ${profile.theme === themeValue ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-white/5 opacity-70 hover:opacity-100'}`}\n                  >\n                    <div className={`w-full h-full bg-gradient-to-br ${themeValue === 'deep-space' ? 'from-slate-900 to-slate-800' : themeValue === 'aurora' ? 'from-emerald-900 to-cyan-900' : themeValue === 'sunset' ? 'from-orange-900 to-purple-900' : 'from-zinc-900 to-black'}`}></div>\n                    <div className=\"absolute inset-0 flex items-center justify-center bg-black/20\">\n                      <span className=\"text-[10px] font-bold uppercase tracking-wider text-white\">{key.replace('_', ' ')}</span>\n                    </div>\n                  </button>\n                );\n              })}\n            </div>\n          </div>\n        )}\n      </div>\n      \n      {/* Footer */}\n      <div className=\"mt-auto p-6 border-t border-white/10\">\n        <p className=\"text-[10px] text-slate-500 text-center\">Changes are saved locally in your browser session.</p>\n      </div>\n    </div>\n  );\n};\n\nexport default AdminPanel;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771501839,
+      "nanos": 666000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501855,
+      "nanos": 842000000
+    }
+  },
+  {
+    "id": 24,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "how can users copy their link tree name to share with people?",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501922,
+      "nanos": 944000000
+    }
+  },
+  {
+    "id": 25,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Exploring Linktree Sharing**\n\nOkay, I've been pondering the sharing options for the Linktree-like functionality. Right now, it's all local – the app's a browser-based prototype. My focus is on how users can disseminate their \"LuminaTree\" links to a wider audience, considering its current limitations. I need to figure out what the next steps are, considering the current local nature of the link.\n\n\n**Implementing Share Functionality**\n\nI'm now zeroing in on the \"Share Profile\" functionality. The plan is to add a button, probably in the `AdminPanel`, that copies the current URL to the clipboard using `navigator.clipboard.writeText`. I'm thinking of a visual cue, like a \"Copied!\" notification, to confirm the action. I need to make sure the button has a distinct design, maybe with an icon. It's time to refine the `AdminPanel` and write the `handleShare` function.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501922,
+      "nanos": 944000000
+    }
+  },
+  {
+    "id": 26,
+    "author": "model",
+    "payload": {
+      "type": "error",
+      "error": "The task was canceled.",
+      "isCancelError": true
+    },
+    "createdTimestamp": {
+      "seconds": 1771501934,
+      "nanos": 462000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501934,
+      "nanos": 462000000
+    }
+  },
+  {
+    "id": 27,
+    "author": "user",
+    "payload": {
+      "type": "text",
+      "text": "how can users copy their link tree link to share with people?",
+      "files": [],
+      "fileUploads": [],
+      "cssBlocks": [],
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501958,
+      "nanos": 821000000
+    }
+  },
+  {
+    "id": 28,
+    "author": "model",
+    "payload": {
+      "type": "thinking",
+      "text": "**Considering Link Sharing**\n\nI'm focusing on incorporating a \"copy LuminaTree link\" feature. I've been examining the app structure, specifically `App.tsx`, which seems to house the layout, with `AdminPanel.tsx` handling profile editing. My aim is to locate the best place to add the link functionality within the existing components.\n\n\n**Implementing Link Sharing**\n\nI'm now zeroing in on integrating the \"Copy Link\" feature. The preview area provides insight into the public page representation. To do this, I plan to include a shareable link option within the `AdminPanel` header, maybe a button. I'm strategizing a conceptual link generation based on the user's name or the current location, keeping in mind this is client-side. I'll utilize `navigator.clipboard.writeText` for copying and add feedback like \"Copied!\". I'll also add appropriate icons.\n\n\n\n**Refining the UI**\n\nI'm now refining the UI for the link-sharing feature. I've decided the `AdminPanel` is the appropriate location, specifically in the header, maybe next to the \"Draft\" badge. I'm aiming for a \"Share\" button with a link icon. Upon clicking, it will copy the `window.location.href`, and change to \"Copied!\" temporarily. I'll modify `constants.tsx` to include `Copy` and `Check` icons, and start modifying `AdminPanel.tsx` to display the link with a copy button and a feedback state.\n\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501958,
+      "nanos": 821000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501972,
+      "nanos": 377000000
+    }
+  },
+  {
+    "id": 29,
+    "author": "model",
+    "payload": {
+      "type": "text",
+      "text": "To make it easy for users to share their LuminaTree, I will add a **\"Share Your Link\"** section at the top of the Admin Panel. This will feature a stylized vanity URL, a copy button, and visual feedback when the link is successfully copied to the clipboard.\n\n### Specification:\n1.  **Icon Updates**: Add `Copy` and `Check` icons from Lucide to the constants for clean visual feedback.\n2.  **Share Component**: Create a new, high-visibility card at the top of the Admin Panel content.\n3.  **Smart URL Generation**: Generate a clean-looking \"vanity\" URL based on the user's display name (e.g., `luminatree.me/alex-rivera`).\n4.  **Copy Logic**: Use the Clipboard API to copy the current page URL to the user's clipboard.\n5.  **Visual Feedback**: The button will transform from a \"Copy\" state to a \"Copied!\" state with a checkmark for 2 seconds after being clicked.\n\n",
+      "cMarkNode": {}
+    },
+    "createdTimestamp": {
+      "seconds": 1771501972,
+      "nanos": 377000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501972,
+      "nanos": 571000000
+    }
+  },
+  {
+    "id": 30,
+    "author": "model",
+    "payload": {
+      "type": "generationTable",
+      "entries": [
+        {
+          "path": "constants.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Add Copy and Check icons to the exports and map.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React from 'react';\nimport { \n  Github, \n  Twitter, \n  Linkedin, \n  Instagram, \n  Youtube, \n  Globe, \n  Mail, \n  Layers,\n  Sparkles,\n  Link as LinkIcon,\n  Palette,\n  User,\n  Plus,\n  Trash2,\n  ExternalLink,\n  ChevronRight,\n  Zap,\n  Facebook,\n  MessageCircle,\n  Copy,\n  Check\n} from 'lucide-react';\nimport { LinkItem, UserProfile } from './types';\n\nexport const INITIAL_LINKS: LinkItem[] = [\n  { id: '1', title: 'Portfolio Website', url: 'https://example.com', icon: 'Globe', active: true },\n  { id: '2', title: 'My GitHub Profile', url: 'https://github.com', icon: 'Github', active: true },\n  { id: '3', title: 'Connect on LinkedIn', url: 'https://linkedin.com', icon: 'Linkedin', active: true },\n  { id: '4', title: 'Follow on Twitter', url: 'https://twitter.com', icon: 'Twitter', active: true },\n];\n\nexport const INITIAL_PROFILE: UserProfile = {\n  name: 'Alex Rivera',\n  bio: 'Full-stack developer & UI designer crafting digital experiences with purpose.',\n  avatarUrl: 'https://picsum.photos/id/64/200/200',\n  theme: 'deep-space'\n};\n\nexport const ICON_MAP: Record<string, React.ReactNode> = {\n  Github: <Github size={20} />,\n  Twitter: <Twitter size={20} />,\n  Linkedin: <Linkedin size={20} />,\n  Instagram: <Instagram size={20} />,\n  Youtube: <Youtube size={20} />,\n  Globe: <Globe size={20} />,\n  Mail: <Mail size={20} />,\n  Layers: <Layers size={20} />,\n  LinkIcon: <LinkIcon size={20} />,\n  Facebook: <Facebook size={20} />,\n  Whatsapp: <MessageCircle size={20} />,\n};\n\nexport const THEMES = {\n  'deep-space': 'from-slate-900 via-slate-800 to-slate-900',\n  'aurora': 'from-emerald-900 via-teal-950 to-cyan-900',\n  'sunset': 'from-orange-900 via-red-950 to-purple-900',\n  'minimal': 'from-zinc-900 via-stone-900 to-black'\n};\n\nexport { \n  Github, \n  Twitter, \n  Linkedin, \n  Instagram, \n  Youtube, \n  Globe, \n  Mail, \n  Layers, \n  Sparkles, \n  LinkIcon, \n  Palette, \n  User, \n  Plus, \n  Trash2, \n  ExternalLink, \n  ChevronRight,\n  Zap,\n  Facebook,\n  MessageCircle,\n  Copy,\n  Check\n};\n"
+            }
+          ]
+        },
+        {
+          "path": "components/AdminPanel.tsx",
+          "generationType": 1,
+          "isDone": true,
+          "description": "Implement \"Copy Link\" functionality with visual feedback in the sidebar.",
+          "diffs": [
+            {
+              "target": "",
+              "replacement": "\nimport React, { useState, useRef } from 'react';\nimport { UserProfile, LinkItem, ThemeType } from '../types';\nimport { \n  User, \n  Palette, \n  Layers, \n  Plus, \n  Trash2, \n  Globe,\n  Github,\n  Twitter,\n  Linkedin,\n  Instagram,\n  Youtube,\n  Mail,\n  Plus as PlusIcon,\n  Facebook,\n  MessageCircle,\n  Copy,\n  Check\n} from '../constants';\n\ninterface AdminPanelProps {\n  profile: UserProfile;\n  setProfile: React.Dispatch<React.SetStateAction<UserProfile>>;\n  links: LinkItem[];\n  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;\n}\n\nconst AdminPanel: React.FC<AdminPanelProps> = ({ profile, setProfile, links, setLinks }) => {\n  const [activeTab, setActiveTab] = useState<'profile' | 'links' | 'appearance'>('profile');\n  const [copied, setCopied] = useState(false);\n  const fileInputRef = useRef<HTMLInputElement>(null);\n\n  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {\n    const { name, value } = e.target;\n    setProfile(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {\n    const file = e.target.files?.[0];\n    if (file) {\n      const reader = new FileReader();\n      reader.onloadend = () => {\n        setProfile(prev => ({ ...prev, avatarUrl: reader.result as string }));\n      };\n      reader.readAsDataURL(file);\n    }\n  };\n\n  const addLink = () => {\n    const newLink: LinkItem = {\n      id: Date.now().toString(),\n      title: 'New Link',\n      url: 'https://',\n      icon: 'Globe',\n      active: true\n    };\n    setLinks([...links, newLink]);\n  };\n\n  const updateLink = (id: string, updates: Partial<LinkItem>) => {\n    setLinks(links.map(l => l.id === id ? { ...l, ...updates } : l));\n  };\n\n  const removeLink = (id: string) => {\n    setLinks(links.filter(l => l.id !== id));\n  };\n\n  const copyToClipboard = () => {\n    // In a real app, this would be the actual published URL\n    const url = window.location.href;\n    navigator.clipboard.writeText(url).then(() => {\n      setCopied(true);\n      setTimeout(() => setCopied(false), 2000);\n    });\n  };\n\n  const vanityUrl = `luminatree.me/${profile.name.toLowerCase().replace(/\\s+/g, '-') || 'username'}`;\n\n  return (\n    <div className=\"flex flex-col h-full bg-slate-900 border-r border-white/10 w-full md:w-96 overflow-y-auto\">\n      {/* Sidebar Header */}\n      <div className=\"p-6 border-b border-white/10 flex items-center justify-between\">\n        <h1 className=\"text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent\">LuminaTree</h1>\n        <div className=\"px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded uppercase tracking-wider\">Draft</div>\n      </div>\n\n      {/* Share Section - Persistent */}\n      <div className=\"px-6 py-4 bg-white/5 border-b border-white/10\">\n        <label className=\"block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest\">Your Public Link</label>\n        <div className=\"flex items-center space-x-2 bg-slate-950/50 border border-white/5 rounded-xl p-1.5 pl-3\">\n          <span className=\"text-xs text-slate-400 truncate flex-1 font-mono\">{vanityUrl}</span>\n          <button \n            onClick={copyToClipboard}\n            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${copied ? 'bg-emerald-500 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}\n          >\n            {copied ? (\n              <><Check size={14} /> <span>Copied!</span></>\n            ) : (\n              <><Copy size={14} /> <span>Copy</span></>\n            )}\n          </button>\n        </div>\n      </div>\n\n      {/* Tabs */}\n      <div className=\"flex border-b border-white/10\">\n        <button \n          onClick={() => setActiveTab('profile')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'profile' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <User size={18} />\n          <span className=\"text-sm font-medium\">Profile</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('links')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'links' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Layers size={18} />\n          <span className=\"text-sm font-medium\">Links</span>\n        </button>\n        <button \n          onClick={() => setActiveTab('appearance')}\n          className={`flex-1 p-4 flex items-center justify-center space-x-2 transition-colors ${activeTab === 'appearance' ? 'bg-white/5 border-b-2 border-blue-500' : 'hover:bg-white/5'}`}\n        >\n          <Palette size={18} />\n          <span className=\"text-sm font-medium\">Design</span>\n        </button>\n      </div>\n\n      {/* Content */}\n      <div className=\"p-6 space-y-6\">\n        {activeTab === 'profile' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            {/* Avatar Upload Section */}\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-3\">Profile Picture</label>\n              <div className=\"flex items-center space-x-4\">\n                <div className=\"relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 group bg-slate-800\">\n                  <img src={profile.avatarUrl} alt=\"Avatar\" className=\"w-full h-full object-cover\" />\n                  <button \n                    onClick={() => fileInputRef.current?.click()}\n                    className=\"absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity\"\n                  >\n                    <PlusIcon size={16} className=\"text-white\" />\n                  </button>\n                </div>\n                <button \n                  onClick={() => fileInputRef.current?.click()}\n                  className=\"px-4 py-2 bg-slate-800 border border-white/10 hover:border-blue-500/50 rounded-xl text-xs font-semibold text-slate-300 transition-all\"\n                >\n                  Upload from Gallery\n                </button>\n                <input \n                  type=\"file\" \n                  ref={fileInputRef}\n                  onChange={handleFileChange}\n                  accept=\"image/*\"\n                  className=\"hidden\"\n                />\n              </div>\n            </div>\n\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Display Name</label>\n              <input \n                type=\"text\" \n                name=\"name\"\n                value={profile.name}\n                onChange={handleProfileChange}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none\"\n              />\n            </div>\n            <div>\n              <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Profile Bio</label>\n              <textarea \n                name=\"bio\"\n                value={profile.bio}\n                onChange={handleProfileChange}\n                rows={4}\n                className=\"w-full bg-slate-800 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none\"\n              />\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'links' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <button \n              onClick={addLink}\n              className=\"w-full flex items-center justify-center space-x-2 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 text-slate-300 hover:text-blue-400 p-4 rounded-2xl transition-all group\"\n            >\n              <Plus size={20} className=\"group-hover:rotate-90 transition-transform\" />\n              <span className=\"font-semibold text-sm\">Add New Link</span>\n            </button>\n            \n            <div className=\"space-y-3\">\n              {links.map((link) => (\n                <div key={link.id} className=\"bg-slate-800 border border-white/10 rounded-2xl p-4 space-y-3\">\n                  <div className=\"flex items-center justify-between\">\n                    <input \n                      type=\"text\" \n                      value={link.title}\n                      onChange={(e) => updateLink(link.id, { title: e.target.value })}\n                      className=\"bg-transparent border-none p-0 text-sm font-bold text-white focus:ring-0 w-full\"\n                    />\n                    <button \n                      onClick={() => removeLink(link.id)}\n                      className=\"text-slate-500 hover:text-red-400 transition-colors p-1\"\n                    >\n                      <Trash2 size={16} />\n                    </button>\n                  </div>\n                  <input \n                    type=\"text\" \n                    value={link.url}\n                    onChange={(e) => updateLink(link.id, { url: e.target.value })}\n                    className=\"w-full bg-slate-900 border border-white/5 rounded-lg p-2 text-xs text-blue-400 outline-none\"\n                    placeholder=\"URL (https://...)\"\n                  />\n                  <div className=\"flex items-center space-x-2 overflow-x-auto pb-1\">\n                    {['Globe', 'Github', 'Twitter', 'Linkedin', 'Instagram', 'Youtube', 'Mail', 'Facebook', 'Whatsapp'].map(iconName => (\n                      <button\n                        key={iconName}\n                        onClick={() => updateLink(link.id, { icon: iconName })}\n                        className={`p-2 rounded-lg transition-all ${link.icon === iconName ? 'bg-blue-500 text-white' : 'bg-slate-900 text-slate-500 hover:text-slate-300'}`}\n                        title={iconName}\n                      >\n                        <div className=\"w-4 h-4 flex items-center justify-center\">\n                          {iconName === 'Globe' && <Globe size={14} />}\n                          {iconName === 'Github' && <Github size={14} />}\n                          {iconName === 'Twitter' && <Twitter size={14} />}\n                          {iconName === 'Linkedin' && <Linkedin size={14} />}\n                          {iconName === 'Instagram' && <Instagram size={14} />}\n                          {iconName === 'Youtube' && <Youtube size={14} />}\n                          {iconName === 'Mail' && <Mail size={14} />}\n                          {iconName === 'Facebook' && <Facebook size={14} />}\n                          {iconName === 'Whatsapp' && <MessageCircle size={14} />}\n                        </div>\n                      </button>\n                    ))}\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )}\n\n        {activeTab === 'appearance' && (\n          <div className=\"space-y-4 animate-in fade-in slide-in-from-left-4 duration-300\">\n            <label className=\"block text-xs font-semibold text-slate-400 uppercase mb-2\">Choose Background Theme</label>\n            <div className=\"grid grid-cols-2 gap-3\">\n              {(Object.keys(ThemeType) as Array<keyof typeof ThemeType>).map((key) => {\n                const themeValue = ThemeType[key];\n                return (\n                  <button\n                    key={themeValue}\n                    onClick={() => setProfile(prev => ({ ...prev, theme: themeValue }))}\n                    className={`h-24 rounded-2xl border-2 transition-all overflow-hidden relative ${profile.theme === themeValue ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-white/5 opacity-70 hover:opacity-100'}`}\n                  >\n                    <div className={`w-full h-full bg-gradient-to-br ${themeValue === 'deep-space' ? 'from-slate-900 to-slate-800' : themeValue === 'aurora' ? 'from-emerald-900 to-cyan-900' : themeValue === 'sunset' ? 'from-orange-900 to-purple-900' : 'from-zinc-900 to-black'}`}></div>\n                    <div className=\"absolute inset-0 flex items-center justify-center bg-black/20\">\n                      <span className=\"text-[10px] font-bold uppercase tracking-wider text-white\">{key.replace('_', ' ')}</span>\n                    </div>\n                  </button>\n                );\n              })}\n            </div>\n          </div>\n        )}\n      </div>\n      \n      {/* Footer */}\n      <div className=\"mt-auto p-6 border-t border-white/10\">\n        <p className=\"text-[10px] text-slate-500 text-center\">Changes are saved locally in your browser session.</p>\n      </div>\n    </div>\n  );\n};\n\nexport default AdminPanel;\n"
+            }
+          ]
+        }
+      ]
+    },
+    "createdTimestamp": {
+      "seconds": 1771501974,
+      "nanos": 39000000
+    },
+    "doneTimestamp": {
+      "seconds": 1771501978,
+      "nanos": 196000000
+    }
+  }
+]
